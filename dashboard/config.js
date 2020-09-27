@@ -30,7 +30,8 @@ function parseApp(appName, host, appId, masterKey, javascriptKey, fileKey) {
   return {
     appName: appName,
     serverURL: host + "/" + appName,
-    icon_name: "whoomies.png",
+    // Updated by NG. icon_name -> iconName
+    iconName: "whoomies.png",
     appId: appId,
     masterKey: masterKey,
     javascriptKey: javascriptKey,
