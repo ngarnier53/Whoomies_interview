@@ -3,3 +3,6 @@ node_modules/
 coverage/
 
 server/logs/
+
+.idea/
+package-lock.json

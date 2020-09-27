@@ -1,7 +1,8 @@
-var http = require("http");
-var express = require('express');
-var ParseServer = require('parse-server').ParseServer;
-var app = express();
+const http = require("http");
+const express = require('express');
+const ParseServer = require('parse-server').ParseServer;
+
+const app = express();
 
 const server = new ParseServer({
   databaseURI:
@@ -21,6 +22,7 @@ const server = new ParseServer({
   restAPIKey: process.env.PARSE_REST_API_KEY,
   serverURL: "http://localhost:" + process.env.PORT + "/" + process.env.APPNAME,
 });
+
 
 // Serve the Parse server on the /appName URL prefix
 app.use("/" + process.env.APPNAME, server);
