@@ -1,6 +1,20 @@
+const {findMovieByIDQuery} = require('../../Movies/utils/helpers')
+/**
+ * find comments : only for dev purpose
+ * @param limit
+ * @returns {Promise<*[]|*>}
+ */
+const allCommentsQuery = async (limit = 30) => {
+
+  const results = await new Parse.Query("Comments").limit(limit).find();
+  return typeof results === "undefined" ? [] : results;
+};
+
+
+
 /**
  * gets the comments for one movie. 
- * @param {String} moveiId -
+ * @param {String} movieId -
  * @param {Number} limit -
  * @returns {[Comments]}
  */
@@ -10,12 +24,22 @@ const findCommentsByMovie = async (movieId, limit = 30) => {
     throw "Movie params must be set";
   }
 
-  let commentsForTheMovie = await allCommentsQuery(movieId).find();
+  // Movie exists
+  if (!!await findMovieByIDQuery(movieId)) {
+    let commentsForTheMovie = await allCommentsByMovieQuery(movieId, limit).find();
+    return commentsForTheMovie === undefined ? [] : commentsForTheMovie;
+  }
 
-  return commentsForTheMovie === undefined ? [] : commentsForTheMovie;
+  throw "this movie doesn't exists"
 };
 
-const allCommentsQuery = (movieId, limit) => {
+/**
+ * All commentsByMovieQuery
+ * @param movieId
+ * @param limit
+ * @returns {Parse.Query}
+ */
+const allCommentsByMovieQuery = (movieId, limit) => {
   let commentsQuery = new Parse.Query("Comments");
   commentsQuery.include(["movie"]);
 
@@ -32,4 +56,6 @@ const allCommentsQuery = (movieId, limit) => {
   return commentsQuery;
 };
 
-module.exports = exports = { findCommentsByMovie };
+
+
+module.exports = exports = { findCommentsByMovie, allCommentsQuery };
