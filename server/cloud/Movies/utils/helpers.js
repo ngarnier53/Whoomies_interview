@@ -37,4 +37,39 @@ const migrateCountCommentsByMovie = async () => {
 
 };
 
-module.exports = exports = { migrateCountCommentsByMovie };
+/**
+ * findMovieByID : find movie by provided id
+ * @param movieID
+ * @returns {Object} : Movie corresponding to movieID or undefined
+ */
+const findMovieByIDQuery = async(movieID) =>
+{
+  if (!!movieID)
+  {
+    let moviesQuery = new Parse.Query("Movies");
+    moviesQuery.equalTo("objectId", movieID);
+
+    // Can returns undefined. It is up to the caller to decide for the behaviour
+    return await moviesQuery.first();
+  }
+  else
+    throw "Movie params must be set";
+}
+
+const findMoviesByYearAndCountryQuery = async(year, country = null) =>
+{
+  let moviesQuery = new Parse.Query("Movies");
+  moviesQuery.greaterThan("year", year);
+  if (!!country)
+    moviesQuery.equalTo("countries", country);
+
+  const results = await moviesQuery.find();
+  return typeof results === "undefined" ? [] : results;
+}
+
+module.exports = exports =
+{
+  migrateCountCommentsByMovie,
+  findMovieByIDQuery,
+  findMoviesByYearAndCountryQuery
+};
