@@ -1,4 +1,5 @@
 const processAllByParseQuery = require("../../utils/processAllByParseQuery");
+const {MovieModel} = require('../models/Movie');
 
 const allMoviesQuery = (limit) => {
   let moviesQuery = new Parse.Query("Movies");
@@ -56,7 +57,7 @@ const findMovieByIDQuery = async(movieID) =>
     throw "Movie params must be set";
 }
 
-const findMoviesByYearAndCountryQuery = async(year, country = null) =>
+const findMoviesByYearAndCountryQuery = async(year, country = null, format = false) =>
 {
   let moviesQuery = new Parse.Query("Movies");
   moviesQuery.greaterThan("year", year);
@@ -64,8 +65,14 @@ const findMoviesByYearAndCountryQuery = async(year, country = null) =>
     moviesQuery.equalTo("countries", country);
 
   const results = await moviesQuery.find();
-  return typeof results === "undefined" ? [] : results;
+
+  if (format)
+    return !!results ? results.map(el => MovieModel.toJSON(el.toJSON())) : [];
+
+  return !!results ? results : [];
 }
+
+
 
 module.exports = exports =
 {

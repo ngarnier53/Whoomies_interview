@@ -10,9 +10,10 @@
   "author": "Pierre",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "express": "^4.17.1",
-    "parse-server": "^4.3.0",
-    "@hapi/joi": "^17.1.1"
+    "moment": "^2.29.0",
+    "parse-server": "^4.3.0"
   },
   "devDependencies": {
     "dotenv": "^8.1.0"

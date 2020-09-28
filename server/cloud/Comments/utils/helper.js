@@ -1,13 +1,27 @@
 const {findMovieByIDQuery} = require('../../Movies/utils/helpers')
+const {CommentModel} = require('../models/Comment');
+
 /**
  * find comments : only for dev purpose
  * @param limit
  * @returns {Promise<*[]|*>}
  */
-const allCommentsQuery = async (limit = 30) => {
+const allComments = async (limit = 30) => {
 
   const results = await new Parse.Query("Comments").limit(limit).find();
-  return typeof results === "undefined" ? [] : results;
+  return !!results ? results : [];
+};
+
+/**
+ * find comments formatted : for dev purpose
+ * @param limit
+ * @returns {Promise<*[]|*>}
+ */
+const allCommentsFormatted = async (limit = 30) => {
+
+  const results = await new Parse.Query("Comments").limit(limit).find();
+
+  return typeof results === "undefined" ? [] : results.map(el => CommentModel.toJSON(el.toJSON()));
 };
 
 
@@ -18,8 +32,7 @@ const allCommentsQuery = async (limit = 30) => {
  * @param {Number} limit -
  * @returns {[Comments]}
  */
-
-const findCommentsByMovie = async (movieId, limit = 30) => {
+const findCommentsByMovie = async (movieId, limit = 30, format = false) => {
   if (movieId === undefined) {
     throw "Movie params must be set";
   }
@@ -27,11 +40,16 @@ const findCommentsByMovie = async (movieId, limit = 30) => {
   // Movie exists
   if (!!await findMovieByIDQuery(movieId)) {
     let commentsForTheMovie = await allCommentsByMovieQuery(movieId, limit).find();
-    return commentsForTheMovie === undefined ? [] : commentsForTheMovie;
+
+    if (format)
+      return !!commentsForTheMovie ? commentsForTheMovie.map(el => CommentModel.toJSON(el.toJSON())) : [];
+
+    return !!commentsForTheMovie ? commentsForTheMovie : [];
   }
 
   throw "this movie doesn't exists"
 };
+
 
 /**
  * All commentsByMovieQuery
@@ -58,4 +76,4 @@ const allCommentsByMovieQuery = (movieId, limit) => {
 
 
 
-module.exports = exports = { findCommentsByMovie, allCommentsQuery };
+module.exports = exports = { findCommentsByMovie, allComments, allCommentsFormatted };
