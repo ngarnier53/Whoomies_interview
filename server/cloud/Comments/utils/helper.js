@@ -27,9 +27,10 @@ const allCommentsFormatted = async (limit = 30) => {
 
 
 /**
- * gets the comments for one movie. 
+ * gets the comments for one movie.
  * @param {String} movieId -
  * @param {Number} limit -
+ * @param {Boolean} format
  * @returns {[Comments]}
  */
 const findCommentsByMovie = async (movieId, limit = 30, format = false) => {
@@ -75,5 +76,22 @@ const allCommentsByMovieQuery = (movieId, limit) => {
 };
 
 
+/**
+ * Count commentsByMovie
+ * @param movieId
+ * @returns {Number}
+ */
+const countCommentsByMovie = async (movieId) => {
 
-module.exports = exports = { findCommentsByMovie, allComments, allCommentsFormatted };
+  let commentsQuery = new Parse.Query("Comments");
+
+  if (movieId !== undefined) {
+    commentsQuery.equalTo("movie_id", movieId);
+  }
+
+  return await commentsQuery.count();
+};
+
+
+
+module.exports = exports = { findCommentsByMovie, allComments, allCommentsFormatted, countCommentsByMovie };

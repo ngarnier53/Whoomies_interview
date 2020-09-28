@@ -1,1 +1,1 @@
-Parse.Cloud.job("Comments Number Fix", require("./linkToComments"));
+Parse.Cloud.job("CommentsNumberFix", require("./linkToComments"));

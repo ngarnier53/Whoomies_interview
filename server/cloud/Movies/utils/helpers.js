@@ -1,5 +1,6 @@
 const processAllByParseQuery = require("../../utils/processAllByParseQuery");
 const {MovieModel} = require('../models/Movie');
+const {countCommentsByMovie} = require('../../Comments/utils/helper');
 
 const allMoviesQuery = (limit) => {
   let moviesQuery = new Parse.Query("Movies");
@@ -21,12 +22,13 @@ const migrateCountCommentsByMovie = async () => {
       query: allMoviesQuery(),
       useMasterKey: true,
       processingFunction: async (movie) => {
-        console.log("GOT THE MOVIE");
+        //console.log("GOT THE MOVIE");
 
         //Count movie comments 
+        const count = await countCommentsByMovie(movie.id);
 
         //Set movie comments number
-        movie.set("num_mflix_comments", 3);
+        movie.set("num_mflix_comments", count);
 
         return movie.save();
       },
