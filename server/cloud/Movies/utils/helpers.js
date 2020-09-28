@@ -22,9 +22,8 @@ const migrateCountCommentsByMovie = async () => {
       query: allMoviesQuery(),
       useMasterKey: true,
       processingFunction: async (movie) => {
-        //console.log("GOT THE MOVIE");
 
-        //Count movie comments 
+        //Count movie comments
         const count = await countCommentsByMovie(movie.id);
 
         //Set movie comments number
@@ -38,6 +37,29 @@ const migrateCountCommentsByMovie = async () => {
     throw error;
   });
 
+};
+
+
+/**
+ * Restore the good number of comments (key num_mfix_comments) for a specific movie
+ * @param {String} movie_id
+ * @returns {Movie}
+ */
+const updateCountCommentsByMovie = async (movie_id) => {
+
+  const movie = await new Parse.Query("Movies").get(movie_id);
+  if (!!movie)
+  {
+    //Count movie comments
+    const count = await countCommentsByMovie(movie.id);
+
+    //Set movie comments number
+    movie.set("num_mflix_comments", count);
+
+    return movie.save();
+  }
+
+  throw "this movie doesn't exists";
 };
 
 /**
@@ -76,9 +98,9 @@ const findMoviesByYearAndCountryQuery = async(year, country = null, format = fal
 
 
 
-module.exports = exports =
-{
+module.exports = exports = {
   migrateCountCommentsByMovie,
   findMovieByIDQuery,
-  findMoviesByYearAndCountryQuery
+  findMoviesByYearAndCountryQuery,
+  updateCountCommentsByMovie
 };

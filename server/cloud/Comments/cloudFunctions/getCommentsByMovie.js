@@ -1,5 +1,6 @@
 const joi = require("@hapi/joi");
 const CommentsHelper = require("../utils/helper")
+const {findMovieByIDQuery} = require('../../Movies/utils/helpers');
 
 const getCommentsByMovieParamsSchema = joi.object({
   limit: joi.number().default(20),
@@ -19,5 +20,8 @@ module.exports =
 
     const { movieId, limit } = params;
 
-    return await CommentsHelper.findCommentsByMovie(movieId, limit);
+    if (!!await findMovieByIDQuery(movieId))
+      return await CommentsHelper.findCommentsByMovie(movieId, limit);
+
+    throw "this movie doesn't exists";
   });

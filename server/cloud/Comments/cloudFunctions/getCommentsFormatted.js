@@ -5,5 +5,5 @@ const CommentsHelper = require("../utils/helper")
 module.exports =
   (async (request) => {
 
-    return await CommentsHelper.allCommentsFormatted();
+    return await CommentsHelper.allComments(30, true);
   });
